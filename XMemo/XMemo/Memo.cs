@@ -11,7 +11,7 @@ namespace XMemo
         /// <summary>
         /// 作成日
         /// </summary>
-        public DateTime Date { get; private set; }
+        public DateTime Date { get; set; }
 
         /// <summary>
         /// 件名
