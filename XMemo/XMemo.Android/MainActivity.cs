@@ -12,23 +12,47 @@ namespace XMemo.Droid
 	[Activity (Label = "XMemo.Android", MainLauncher = true, Icon = "@drawable/icon")]
 	public class MainActivity : Activity
 	{
-		int count = 1;
+        private EditText date;
+        private EditText subject;
+        private EditText memo;
 
-		protected override void OnCreate (Bundle bundle)
+        protected override void OnCreate (Bundle bundle)
 		{
 			base.OnCreate (bundle);
-
-			// Set our view from the "main" layout resource
 			SetContentView (Resource.Layout.Main);
 
-			// Get our button from the layout resource,
-			// and attach an event to it
-			Button button = FindViewById<Button> (Resource.Id.myButton);
-			
-			button.Click += delegate {
-				button.Text = string.Format ("{0} clicks!", count++);
-			};
+            // テキストの参照を取得しておく
+            this.date = FindViewById<EditText>(Resource.Id.DateText);
+            this.subject = FindViewById<EditText>(Resource.Id.SubjectText);
+            this.memo = FindViewById<EditText>(Resource.Id.MemoText);
+
+            // テキスト変更時のイベント設定
+            // 入力された内容をMemoクラスに保持する
+            this.subject.TextChanged += (s, e) =>
+            {
+                MemoHolder.Current.Memo.Subject = this.subject.Text;
+            };
+            this.memo.TextChanged += (s, e) =>
+            {
+                MemoHolder.Current.Memo.Text = this.memo.Text;
+            };
+
+            var m = new Memo();
+            m.Date = DateTime.Now;
+            m.Subject = string.Empty;
+            m.Text = string.Empty;
+            MemoHolder.Current.Memo = m;
+
+            Display();
 		}
+
+        private void Display()
+        {
+            var m = MemoHolder.Current.Memo;
+            this.date.Text = m.Date.ToString("yyyy/MM/dd");
+            this.subject.Text = m.Subject;
+            this.memo.Text = m.Text;
+        }
 	}
 }
 
