@@ -37,6 +37,9 @@ namespace XMemo.Droid
                 MemoHolder.Current.Memo.Text = this.memo.Text;
             };
 
+            // 日付テキストクリック時にはDateText_Clickを走らせる
+            this.date.Click += DateText_Click;
+
             var m = new Memo();
             m.Date = DateTime.Now;
             m.Subject = string.Empty;
@@ -46,6 +49,7 @@ namespace XMemo.Droid
             Display();
 		}
 
+        #region メソッド(private)
         private void Display()
         {
             var m = MemoHolder.Current.Memo;
@@ -53,7 +57,23 @@ namespace XMemo.Droid
             this.subject.Text = m.Subject;
             this.memo.Text = m.Text;
         }
-	}
+        #endregion
+
+        #region イベント
+        private void DateText_Click(object sender, EventArgs e)
+        {
+            var picker = new MyDatePicker();
+            picker.InitialDate = MemoHolder.Current.Memo.Date;
+            picker.Selected += (s, arg) =>
+            {
+                MemoHolder.Current.Memo.Date = arg.SelectedDate;
+                Display();
+            };
+
+            picker.Show(FragmentManager, "tag");
+        }
+        #endregion
+    }
 }
 
 
